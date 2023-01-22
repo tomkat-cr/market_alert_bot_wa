@@ -1,7 +1,8 @@
 from fastapi.responses import PlainTextResponse
-from settings import settings
-from whatsapp_send_message import send_whatsapp_message
-from request_processing import request_processing
+
+from .settings import settings
+from .whatsapp_send_message import send_whatsapp_message
+from .request_processing import request_processing
 
 
 def whatsapp_webhook_get(request):
@@ -11,7 +12,7 @@ def whatsapp_webhook_get(request):
         token = request.get('hub.verify_token')
         challenge = request.get('hub.challenge')
         print(f'whatsapp_webhook_get: mode={mode}, token={token}, challenge={challenge}')
-        if mode == 'subscribe' and token == WHATSAPP_VERIFY_TOKEN:
+        if mode and token and mode == 'subscribe' and token == WHATSAPP_VERIFY_TOKEN:
             print('HTTPResponse(challenge, status=200)')
             return PlainTextResponse(content=challenge, status_code=200)
         else:
@@ -29,18 +30,18 @@ def whatsapp_webhook_post(data):
         webhook_response = 'success'
         status_code = 200
 
-        print('Paso por aca 1')
+        # print('Paso por aca 1')
 
-        if not data.object or not data.entry:
+        if not data or not data.object or not data.entry:
             webhook_response = 'No object and/or entry data'
 
-        print('Paso por aca 2')
+        # print('Paso por aca 2')
 
-        if data.object != 'whatsapp_business_account':
+        if data and data.object != 'whatsapp_business_account':
             webhook_response = 'object is not "whatsapp_business_account":' + \
                 f" {data.object}"
 
-        print('Paso por aca 3')
+        # print('Paso por aca 3')
 
         if webhook_response != 'success':
             print(f'IGNORED: whatsapp_webhook_post() -> {webhook_response}')
@@ -49,7 +50,7 @@ def whatsapp_webhook_post(data):
                 status_code=status_code
             )
 
-        print('Paso por aca 4')
+        # print('Paso por aca 4')
 
         for entry in data.entry:
             if 'contacts' not in entry['changes'][0]['value']:
@@ -63,10 +64,10 @@ def whatsapp_webhook_post(data):
             # timestamp = entry['changes'][0]['value']['messages'][0]['timestamp']
             text = entry['changes'][0]['value']['messages'][0]['text']['body']
 
-            print('Paso por aca 5')
+            # print('Paso por aca 5')
 
             message = f'RE: {str(text)} was received from {str(whatsapp_id)}'
-            print(f'Paso por aca 5.5, message: {message}')
+            print(f'Message: {message}')
             message = request_processing(whatsapp_id, text)
 
             swm_response = send_whatsapp_message(whatsapp_id, message)
@@ -75,6 +76,7 @@ def whatsapp_webhook_post(data):
     except Exception as err:
         webhook_response = str(err)
         status_code = 500
+        # raise Exception(err)
 
     print('whatsapp_webhook_post() ->' +
           f' webhook_response: {webhook_response},' +

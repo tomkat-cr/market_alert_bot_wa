@@ -1,6 +1,6 @@
 import requests
-from settings import settings
-from utilities import get_api_standard_response
+from .settings import settings
+from .mediabros_utilities import get_api_standard_response
 
 
 # Documetation:
@@ -18,12 +18,12 @@ def send_whatsapp_message_generic(phone_number, message_payload):
         payload["messaging_product"] = "whatsapp"
         payload["to"] = phone_number
 
-        print(
-            '>>--> SEND MESSAGE TO WHATSAPP:',
-            f'url: {settings.WHATSAPP_URL}',
-            f'headers: {headers}',
-            f'payload: {payload}',
-        )
+        # print(
+        #     '>>--> SEND MESSAGE TO WHATSAPP:',
+        #     f'url: {settings.WHATSAPP_URL}',
+        #     f'headers: {headers}',
+        #     f'payload: {payload}',
+        # )
 
         response_post = requests.post(
             settings.WHATSAPP_URL,

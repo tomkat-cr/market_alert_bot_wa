@@ -39,12 +39,14 @@ if [ "$1" = "pipfile" ]; then
 fi
 if [ "$1" = "clean" ]; then
     echo "Cleaning..."
+    cd ${APP_DIR} ;
     deactivate ;
     rm -rf __pycache__ ;
     rm -rf bin ;
     rm -rf include ;
     rm -rf lib ;
     rm -rf pyvenv.cfg ;
+    rm -rf ../.vercel/cache ;
     ls -lah
 fi
 
@@ -59,7 +61,7 @@ if [ "$1" = "run_ngrok" ]; then
     ../node_modules/ngrok/bin/ngrok http $PORT
 fi
 
-if [[ "$1" = "run_module" || "$1" = "" ]]; then
+if [[ "$1" = "run_module" ]]; then
     echo "Run module only..."
     python index.py cli
     echo "Done..."
@@ -67,12 +69,15 @@ fi
 
 if [[ "$1" = "run" || "$1" = "" ]]; then
     echo "Run..."
+    cd ..
     vercel dev --listen 0.0.0.0:$PORT ;
     echo "Done..."
 fi
 if [ "$1" = "deploy_prod" ]; then
+    cd ..
     vercel --prod ;
 fi
 if [ "$1" = "rename_staging" ]; then
+    cd ..
     vercel alias $2 ${APP_NAME}-staging-tomkat-cr.vercel.app
 fi

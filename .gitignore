@@ -131,7 +131,7 @@ dmypy.json
 node_modules
 
 # For the vercel deployment because `venv` will br replaced by `src` directory.
-src/.vercel
+.vercel
 src/bin
 src/include
 src/lib

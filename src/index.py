@@ -1,3 +1,4 @@
+import logging
 import sys
 from typing import Union, Any
 
@@ -5,9 +6,15 @@ from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from a2wsgi import ASGIMiddleware
 
-from whatsapp_webhook import whatsapp_webhook_get, whatsapp_webhook_post
-from whatsapp_send_message import send_whatsapp_message, send_whatsapp_template
-from utilities import get_formatted_date
+from .whatsapp_webhook import whatsapp_webhook_get, whatsapp_webhook_post
+from .whatsapp_send_message import send_whatsapp_message, send_whatsapp_template
+from .mediabros_utilities import get_formatted_date
+
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
 
 def get_command_line_args():
