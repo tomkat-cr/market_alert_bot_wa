@@ -1,0 +1,36 @@
+{
+  "name": "market_alert_bot_wa",
+  "version": "1.0.0",
+  "description": "WhatsApp Market Alert BOT in Python.",
+  "main": "src/index.py",
+  "scripts": {
+    "deactivate": "sh run.sh deactivate",
+    "pipfile": "sh run.sh pipfile",
+    "clean": "sh run.sh clean",
+    "test": "sh run.sh test",
+    "run:ngrok": "sh run.sh run_ngrok",
+    "run:cli": "sh run.sh run_module",
+    "run:dev": "sh run.sh run",
+    "run": "sh run.sh",
+    "deploy": "sh run.sh deploy_prod",
+    "rename_staging": "sh run.sh rename_staging"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomkat-cr/market_alert_bot_wa.git"
+  },
+  "keywords": [
+    "python",
+    "api",
+    "python3"
+  ],
+  "author": "Carlos J. Ramirez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomkat-cr/market_alert_bot_wa/issues"
+  },
+  "homepage": "https://github.com/tomkat-cr/market_alert_bot_wa#readme",
+  "devDependencies": {
+    "ngrok": "^4.3.3"
+  }
+}
