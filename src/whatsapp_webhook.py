@@ -7,18 +7,20 @@ from .request_processing import request_processing
 
 def whatsapp_webhook_get(request):
     try:
-        WHATSAPP_VERIFY_TOKEN = settings.WHATSAPP_VERIFY_TOKEN
         mode = request.get('hub.mode')
         token = request.get('hub.verify_token')
         challenge = request.get('hub.challenge')
-        print(f'whatsapp_webhook_get: mode={mode}, token={token}, challenge={challenge}')
-        if mode and token and mode == 'subscribe' and token == WHATSAPP_VERIFY_TOKEN:
+        print(f'whatsapp_webhook_get: mode={mode},' +
+              f' token={token}, challenge={challenge}')
+        if mode and token and mode == 'subscribe' \
+           and token == settings.WHATSAPP_VERIFY_TOKEN:
             print('HTTPResponse(challenge, status=200)')
             return PlainTextResponse(content=challenge, status_code=200)
         else:
             print(f"mode == 'subscribe': {mode == 'subscribe'}")
-            print(f'token == WHATSAPP_VERIFY_TOKEN: {token == WHATSAPP_VERIFY_TOKEN}')
-            print(f'WHATSAPP_VERIFY_TOKEN: {WHATSAPP_VERIFY_TOKEN}')
+            print('token == WHATSAPP_VERIFY_TOKEN:' +
+                  f' {token == settings.WHATSAPP_VERIFY_TOKEN}')
+            print(f'WHATSAPP_VERIFY_TOKEN: {settings.WHATSAPP_VERIFY_TOKEN}')
             print('HTTPResponse(\'error\', status=403)')
             return PlainTextResponse(content='error', status_code=403)
     except Exception as err:

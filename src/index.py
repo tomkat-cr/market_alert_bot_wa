@@ -1,5 +1,4 @@
 import logging
-import sys
 from typing import Union, Any
 
 from fastapi import FastAPI, Request
@@ -7,8 +6,9 @@ from pydantic import BaseModel
 from a2wsgi import ASGIMiddleware
 
 from .whatsapp_webhook import whatsapp_webhook_get, whatsapp_webhook_post
-from .whatsapp_send_message import send_whatsapp_message, send_whatsapp_template
-from .mediabros_utilities import get_formatted_date
+from .whatsapp_send_message import send_whatsapp_message, \
+    send_whatsapp_template
+from .general_utilities import get_formatted_date, get_command_line_args
 
 
 logging.basicConfig(
@@ -17,32 +17,28 @@ logging.basicConfig(
 )
 
 
-def get_command_line_args():
-    params = dict()
-    params['mode'] = 'api'
-    params['config_filename'] = '.env'
-    if len(sys.argv) > 1:
-        params['mode'] = sys.argv[1]
-    if len(sys.argv) > 2:
-        params['config_filename'] = sys.argv[2]
-    return params
+class Body(BaseModel):
+    object: Union[str, None] = None
+    entry: Union[Any, None] = None
 
+
+# CLI handle
 
 params = get_command_line_args()
 if params['mode'] == 'cli':
-    apiResponse = whatsapp_webhook_post(params.get('body'))
+    body = Body(BaseModel)
+    body.entry = params.get('body')
+    body.object = 'whatsapp_business_account'
+    apiResponse = whatsapp_webhook_post()
     print(apiResponse)
+
+# API handle
 
 api = FastAPI()
 app = ASGIMiddleware(api)
 
 
-# EndPoints
-
-
-class Body(BaseModel):
-    object: Union[str, None] = None
-    entry: Union[Any, None] = None
+# API EndPoints
 
 
 @api.get("/data/")
@@ -76,7 +72,7 @@ async def webhook_post(body: Body):
 
 
 @api.get("/send_template")
-def send_template(phone, template='hello_world'):
+async def send_template(phone, template='hello_world'):
     print('---------')
     print(get_formatted_date())
     print('send_template')

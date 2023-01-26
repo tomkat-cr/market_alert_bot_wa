@@ -1,12 +1,18 @@
-from .mediabros_exchange_apis import usdcop, usdveb, veb_cop, crypto
+from .ext_api_processing import usdcop, usdveb, veb_cop, crypto, openai_api
 
 
 def request_processing(phone_number, message):
     param_separated = message.split(" ")
     command = param_separated[0]
-    debug = False
-    if len(param_separated) > 1 and param_separated[1] == 'debug':
-        debug = True
+    param_separated.remove(command)
+    debug = 0
+    if len(param_separated) >= 1:
+        if param_separated[0] == '/debug':
+            debug = 1
+            param_separated.remove('/debug')
+    other_param = ' '.join(param_separated)
+    if command in ['/ai', '/codex']:
+        return openai_api(command, other_param, debug)
     if command == '/cop':
         return usdcop(debug)
     if command == '/bs':

@@ -1,6 +1,6 @@
 import requests
 from .settings import settings
-from .mediabros_utilities import get_api_standard_response
+from .general_utilities import get_api_standard_response
 
 
 # Documetation:

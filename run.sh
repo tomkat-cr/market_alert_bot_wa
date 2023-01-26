@@ -63,7 +63,8 @@ fi
 
 if [[ "$1" = "run_module" ]]; then
     echo "Run module only..."
-    python index.py cli
+    cd ..
+    python -m src.index.py cli
     echo "Done..."
 fi
 
